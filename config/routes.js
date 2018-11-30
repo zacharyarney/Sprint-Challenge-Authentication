@@ -6,6 +6,20 @@ const db = require('../database/dbConfig');
 
 const { authenticate } = require('./middlewares');
 
+function generateToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username,
+  };
+
+  const { jwtKey } = require('../_secrets/keys');
+  const options = {
+    expiresIn: '1h',
+  };
+
+  return jwt.sign(payload, jwtKey, options);
+}
+
 module.exports = (server) => {
   server.post('/api/register', register);
   server.post('/api/login', login);
